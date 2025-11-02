@@ -24,6 +24,7 @@
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "mongoose": "^8.19.2",
+    "mongoose-express-sanitizer": "^2.0.1",
     "morgan": "^1.10.1",
     "nodemon": "^3.1.10"
   }
