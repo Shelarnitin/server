@@ -8,6 +8,8 @@ import hpp from "hpp";
 import cookieParser from "cookie-parser";
 import cors from "cors"
 
+import healthRoute from "./routes/health.routes.js"
+
 
 dotenv.config();
 console.log(process.env.PORT);
@@ -66,6 +68,8 @@ app.use(cors({
 }))
 
 //API Routes
+
+app.use("/health", healthRoute);
 
 // it should be always at the bottom
 // 404 handler
