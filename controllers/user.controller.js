@@ -1,6 +1,7 @@
 import { User } from "../models/user.model.js"
 import { ApiError, catchAsync } from "../middleware/error.middleware.js";
 import { generateToken } from "../utils/generateToken.js";
+import { deleteMediaFromCloudinary, uploadMedia} from "../utils/cloudinary.js"
 
 export const createUserAccount = catchAsync(async(req, res) => {
     const {name, email, password, role= 'student'} = req.body
@@ -63,5 +64,39 @@ export const getCurrentUserProfile = catchAsync(async(req, res) => {
         },
     });
 });
+
+export const updateUserProfile = catchAsync(async(req, res) => {
+    const {name, email, bio} = req.body
+    const updateData = {name, email: email?.toLowerCase(), bio}
+
+    if(req.file){
+        const avatarResult = await uploadMedia(req.file.path)
+        updateData.avatar = avatarResult.secure_url
+
+        //delete old avatar
+       const user = await User.findById(req.id)
+       if(user.avatar && user.avatar !== 'default-avatar.png'){
+        await deleteMediaFromCloudinary(user.avatar)
+       }
+    }
+
+    //update user and get updated doc
+    const updatedUser = await User.findByIdAndUpdate(
+        req.id,
+        updateData,
+        {new : true, runValidators: true}
+    )
+
+    if(!updatedUser){
+        throw new ApiError("User not found", 404);
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Profile updated successfully",
+        data: updatedUser,
+    });
+});
+
 
 export const test = catchAsync(async(req, res) => {});
