@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors"
 
 import healthRoute from "./routes/health.routes.js"
+import userRoute from "./routes/user.route.js"
 
 
 dotenv.config();
@@ -70,6 +71,7 @@ app.use(cors({
 //API Routes
 
 app.use("/health", healthRoute);
+app.use("/api/v1/user", userRoute);
 
 // it should be always at the bottom
 // 404 handler
